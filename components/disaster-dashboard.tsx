@@ -162,7 +162,11 @@ export function DisasterDashboard({ initialData, lastUpdate }: DisasterDashboard
           {statCards.map((stat) => (
             <Card
               key={stat.label}
-              className={stat.highlight ? 'border-destructive/40 bg-destructive/5 shadow-sm' : ''}
+              className={
+                stat.highlight
+                  ? 'border-destructive/40 bg-destructive/5 shadow-sm hover:cursor-pointer'
+                  : ''
+              }
               role={stat.highlight ? 'button' : undefined}
               tabIndex={stat.highlight ? 0 : undefined}
               onClick={stat.highlight ? () => router.push('/daftar-korban') : undefined}
