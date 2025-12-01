@@ -1,4 +1,4 @@
-import { Paperclip, Phone } from "lucide-react"; // Asumsikan Paperclip dan Phone diimpor
+import { Paperclip, Phone } from 'lucide-react'; // Asumsikan Paperclip dan Phone diimpor
 
 export function Footer() {
   return (
@@ -9,8 +9,8 @@ export function Footer() {
           <Paperclip className="h-5 w-5" />
         </div>
         <p className="text-sm md:text-base font-medium">
-          <span className="font-semibold text-primary">Sumber Data:</span> BPBD
-          (BADAN PENANGGULANGAN BENCANA DAERAH) KABUPATEN TAPANULI TENGAH.
+          <span className="font-semibold text-primary">Sumber Data:</span> BPBD (BADAN
+          PENANGGULANGAN BENCANA DAERAH) KABUPATEN TAPANULI TENGAH.
         </p>
       </div>
 
@@ -20,7 +20,7 @@ export function Footer() {
           <Phone className="h-5 w-5" />
         </div>
         <p className="text-sm md:text-base font-medium">
-          <span className="font-semibold">Call Center Darurat:</span>{" "}
+          <span className="font-semibold">Call Center Darurat:</span>{' '}
           <a
             href="tel:081290900222"
             className="text-destructive/90 hover:text-destructive underline font-bold transition-colors"

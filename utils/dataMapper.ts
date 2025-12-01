@@ -1,12 +1,8 @@
-import {
-  DeceasedData,
-  DisasterData,
-  SheetValues,
-} from "../interfaces/DisasterData";
+import { DeceasedData, DisasterData, SheetValues } from '../interfaces/DisasterData';
 
 const cleanNumber = (value: string | null | undefined): number => {
-  if (typeof value === "string") {
-    const cleaned = value.replace(/\s+/g, "").replace(/,/g, "");
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/\s+/g, '').replace(/,/g, '');
     const num = parseFloat(cleaned);
     return isNaN(num) ? 0 : num;
   }
@@ -27,7 +23,7 @@ export function mapSheetData(sheetData: SheetValues): DisasterData[] {
       }
 
       const kecamatan = String(row[1]).trim();
-      if (kecamatan === "") {
+      if (kecamatan === '') {
         return null;
       }
 
@@ -70,7 +66,7 @@ export function mapSheetDataDeceased(sheetData: SheetValues): DeceasedData[] {
       }
 
       const name = String(row[1]).trim();
-      if (name === "") {
+      if (name === '') {
         return null;
       }
 
