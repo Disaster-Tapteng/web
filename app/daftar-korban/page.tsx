@@ -11,7 +11,7 @@ export default async function Home() {
   // );
   const lastUpdate = '';
   const data = await getSheetData(
-    'DATA-MENINGGAL!A5:N',
+    'DATA-MENINGGAL!A4:N',
     '11lz-JRqZm7nRt1Ya4ARFPFv4MoMEn72G2ChoaBsewaI',
   );
 
