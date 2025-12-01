@@ -5,7 +5,7 @@ import { mapSheetDataEvacuee } from '../../utils/dataMapper';
 export const revalidate = 300;
 
 export default async function EvacueesPage() {
-  const spreadsheetId = '1eh29yJ4iDHpDgpn0WEaEje42bzWV5M6OHKxUo7F4KMc';
+  const spreadsheetId = '11lz-JRqZm7nRt1Ya4ARFPFv4MoMEn72G2ChoaBsewaI';
 
   const lastUpdate = await getSheetLastUpdate(spreadsheetId);
 
