@@ -35,6 +35,7 @@ export function Refugee({ initialData, lastUpdate }: RefugeeProps) {
   const [data] = useState<RefugeeData[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
   const [openKecamatan, setOpenKecamatan] = useState<Record<string, boolean>>({});
+  const [defaultOpen, setDefaultOpen] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
   const lastUpdateDate = lastUpdate && lastUpdate[0] && lastUpdate[0][1];
@@ -46,26 +47,29 @@ export function Refugee({ initialData, lastUpdate }: RefugeeProps) {
       .replace(/(^-|-$)+/g, '');
 
   const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
-
     const s = searchTerm.toLowerCase();
+
     return data
-      .map((item) => ({
-        ...item,
-        posko: item.posko.filter(
+      .map((item) => {
+        const poskoFiltered = item.posko.filter(
           (p) =>
             p.nama.toLowerCase().includes(s) ||
             p.no.toString().includes(s) ||
-            p.jumlah.toLowerCase().includes(s) ||
-            item.kecamatan.toLowerCase().includes(s),
-        ),
-      }))
-      .filter((item) => item.posko.length > 0);
+            p.jumlah.toLowerCase().includes(s),
+        );
+
+        if (item.kecamatan.toLowerCase().includes(s)) {
+          return item;
+        }
+
+        return { ...item, posko: poskoFiltered };
+      })
+      .filter((item) => item.posko.length > 0 || item.kecamatan.toLowerCase().includes(s));
   }, [searchTerm, data]);
 
   useEffect(() => {
     if (searchTerm === '') {
-      setOpenKecamatan({});
+      setOpenKecamatan(defaultOpen);
       return;
     }
 
@@ -73,8 +77,9 @@ export function Refugee({ initialData, lastUpdate }: RefugeeProps) {
     filteredData.forEach((item) => {
       allOpen[item.kecamatan] = true;
     });
+
     setOpenKecamatan(allOpen);
-  }, [searchTerm, filteredData]);
+  }, [searchTerm, filteredData, defaultOpen]);
 
   const toggleKecamatan = (name: string) => {
     setOpenKecamatan((prev) => ({
@@ -82,6 +87,16 @@ export function Refugee({ initialData, lastUpdate }: RefugeeProps) {
       [name]: !prev[name],
     }));
   };
+
+  useEffect(() => {
+    const all: Record<string, boolean> = {};
+    data.forEach((item) => {
+      all[item.kecamatan] = true;
+    });
+
+    setDefaultOpen(all);
+    setOpenKecamatan(all);
+  }, [data]);
 
   const handleRowClick = (nama: string, jumlah: string) => {
     // Only navigate if jumlah > 0
@@ -122,73 +137,74 @@ export function Refugee({ initialData, lastUpdate }: RefugeeProps) {
         </div>
 
         {/* Table */}
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              {filteredData.map((item) => (
-                <div key={item.kecamatan}>
-                  {/* Kecamatan Header */}
-                  <button
-                    onClick={() => toggleKecamatan(item.kecamatan)}
-                    className="w-full flex items-center justify-between px-4 py-3 bg-muted/50 border-b text-left"
-                  >
-                    <span className="font-bold text-lg">{item.kecamatan}</span>
-                    {openKecamatan[item.kecamatan] ? (
-                      <ChevronDown className="h-5 w-5" />
-                    ) : (
-                      <ChevronRight className="h-5 w-5" />
-                    )}
-                  </button>
-
-                  {/* POSKO TABLE */}
-                  {openKecamatan[item.kecamatan] && (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-muted/40">
-                          <TableHead className="w-16 font-semibold">NO</TableHead>
-                          <TableHead className="font-semibold">NAMA POSKO</TableHead>
-                          <TableHead className="text-right font-semibold">
-                            JUMLAH PENGUNGSI
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-
-                      <TableBody>
-                        {item.posko.map((p, index) => {
-                          const isClickable = parseInt(p.jumlah) > 0;
-
-                          return (
-                            <TableRow
-                              key={index}
-                              onClick={() => handleRowClick(p.nama, p.jumlah)}
-                              className={
-                                isClickable
-                                  ? 'hover:bg-muted/50 cursor-pointer'
-                                  : 'opacity-60 cursor-default'
-                              }
-                            >
-                              <TableCell className="font-medium">{p.no}</TableCell>
-                              <TableCell className="font-medium">{p.nama}</TableCell>
-                              <TableCell className="text-right">{p.jumlah}</TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Footer />
-
         {filteredData.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             Tidak ada data yang sesuai dengan pencarian
           </div>
         )}
+        {filteredData.length > 0 && (
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                {filteredData.map((item) => (
+                  <div key={item.kecamatan}>
+                    {/* Kecamatan Header */}
+                    <button
+                      onClick={() => toggleKecamatan(item.kecamatan)}
+                      className="w-full flex items-center justify-between px-4 py-3 bg-muted/50 border-b text-left"
+                    >
+                      <span className="font-bold text-lg">{item.kecamatan}</span>
+                      {openKecamatan[item.kecamatan] ? (
+                        <ChevronDown className="h-5 w-5" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5" />
+                      )}
+                    </button>
+
+                    {/* POSKO TABLE */}
+                    {openKecamatan[item.kecamatan] && (
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted/40">
+                            <TableHead className="w-16 font-semibold">NO</TableHead>
+                            <TableHead className="font-semibold">NAMA POSKO</TableHead>
+                            <TableHead className="text-right font-semibold">
+                              JUMLAH PENGUNGSI
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                          {item.posko.map((p, index) => {
+                            const isClickable = parseInt(p.jumlah) > 0;
+
+                            return (
+                              <TableRow
+                                key={index}
+                                onClick={() => handleRowClick(p.nama, p.jumlah)}
+                                className={
+                                  isClickable
+                                    ? 'hover:bg-muted/50 cursor-pointer'
+                                    : 'opacity-60 cursor-default'
+                                }
+                              >
+                                <TableCell className="font-medium">{p.no}</TableCell>
+                                <TableCell className="font-medium">{p.nama}</TableCell>
+                                <TableCell className="text-right">{p.jumlah}</TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Footer />
       </div>
     </div>
   );
