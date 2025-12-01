@@ -86,3 +86,44 @@ export function mapSheetDataDeceased(sheetData: SheetValues): DeceasedData[] {
     })
     .filter((record): record is DeceasedData => record !== null);
 }
+
+export function mapSheetDataRefugee(sheetData: SheetValues): {
+  post: any[];
+  total: number;
+} {
+  const post: any[] = [];
+  let currentKecamatan = '';
+  let total = 0;
+
+  for (const row of sheetData) {
+    const [kecamatanCol, noCol, namaCol, jumlahCol] = row;
+
+    if (kecamatanCol && kecamatanCol.trim() !== '') {
+      currentKecamatan = kecamatanCol.trim();
+      post.push({
+        kecamatan: currentKecamatan,
+        posko: [],
+      });
+    }
+
+    if (!currentKecamatan) continue;
+
+    const nama = namaCol?.trim() ?? '';
+    const no = Number(noCol);
+    const jumlah = jumlahCol?.trim() ?? 'Belum diketahui';
+
+    if (nama.toLowerCase() === 'total' || no === 0) {
+      continue;
+    }
+
+    const poskoItem = { no, nama, jumlah };
+    post[post.length - 1].posko.push(poskoItem);
+
+    const parsed = parseInt(jumlah);
+    if (!isNaN(parsed)) {
+      total += parsed;
+    }
+  }
+
+  return { post, total };
+}
