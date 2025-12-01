@@ -1,15 +1,18 @@
-import { DeceasedVictims } from "@/components/deceased_victims";
-import { getSheetData } from "../../lib/sheet/google-sheets";
-import { mapSheetDataDeceased } from "@/utils/dataMapper";
+import { DeceasedVictims } from '@/components/deceased_victims';
+import { getSheetData } from '../../lib/sheet/google-sheets';
+import { mapSheetDataDeceased } from '@/utils/dataMapper';
+
+export const revalidate = 300;
 
 export default async function Home() {
-  const lastUpdate = await getSheetData(
-    "DATA_MD!A2:B2",
-    "1ZFPFHPU31BTnYAVjG0OoOvlYebL4y8qDolF14IMWcNY"
-  );
+  // const lastUpdate = await getSheetData(
+  //   "DATA_MD!A2:B2",
+  //   "1ZFPFHPU31BTnYAVjG0OoOvlYebL4y8qDolF14IMWcNY"
+  // );
+  const lastUpdate = '';
   const data = await getSheetData(
-    "DATA_MD!A6:N",
-    "1ZFPFHPU31BTnYAVjG0OoOvlYebL4y8qDolF14IMWcNY"
+    'DATA-MENINGGAL!A5:N',
+    '11lz-JRqZm7nRt1Ya4ARFPFv4MoMEn72G2ChoaBsewaI',
   );
 
   const initialData = mapSheetDataDeceased(data ?? []);

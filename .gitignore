@@ -38,6 +38,9 @@ coverage/
 *.DS_Store
 
 # Ignore lock files (optional, if using only one lock file type)
-# yarn.lock
-# package-lock.json
-# pnpm-lock.yaml
+yarn.lock
+package-lock.json
+# pnpm-lock.yaml (tracked - using pnpm)
+
+# Others
+.docs

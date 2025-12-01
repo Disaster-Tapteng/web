@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { Input } from "@/components/ui/input";
+import { useState, useMemo } from 'react';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -9,26 +9,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
-import { Search, AlertTriangle } from "lucide-react";
-import { DeceasedData } from "@/interfaces/DisasterData";
-import { useRouter } from "next/navigation";
-import { Footer } from "./footer";
+} from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
+import { Search, AlertTriangle } from 'lucide-react';
+import { DeceasedData } from '@/interfaces/DisasterData';
+import { Footer } from './footer';
 
 interface DeceasedVictimsProps {
   initialData: DeceasedData[];
   lastUpdate: any;
 }
 
-export function DeceasedVictims({
-  initialData,
-  lastUpdate,
-}: DeceasedVictimsProps) {
+export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProps) {
   const [data] = useState<DeceasedData[]>(initialData);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -38,7 +32,7 @@ export function DeceasedVictims({
     return data.filter((item) => {
       return (
         item.name.toLowerCase().includes(search) ||
-        (item.no ?? "").toString().includes(search) ||
+        (item.no ?? '').toString().includes(search) ||
         item.umur.toString().includes(search) ||
         item.alamat.toString().includes(search) ||
         item.description.toString().includes(search)
@@ -69,7 +63,7 @@ export function DeceasedVictims({
                 Daftar Korban Meninggal
               </h1>
               <p className="text-muted-foreground text-sm md:text-base">
-                Update Terakhir : {lastUpdateDate || "Tanggal tidak tersedia"}
+                Update Terakhir : {lastUpdateDate || 'Tanggal tidak tersedia'}
               </p>
             </div>
           </div>
@@ -94,18 +88,10 @@ export function DeceasedVictims({
                 <TableHeader>
                   <TableRow className="bg-muted/50">
                     <TableHead className="w-16 font-semibold">NO</TableHead>
-                    <TableHead className="min-w-[150px] font-semibold">
-                      NAMA
-                    </TableHead>
-                    <TableHead className="text-right font-semibold min-w-[120px]">
-                      UMUR
-                    </TableHead>
-                    <TableHead className="text-right font-semibold">
-                      ALAMAT
-                    </TableHead>
-                    <TableHead className="text-right font-semibold">
-                      KETERANGAN
-                    </TableHead>
+                    <TableHead className="min-w-[150px] font-semibold">NAMA</TableHead>
+                    <TableHead className="text-right font-semibold min-w-[120px]">UMUR</TableHead>
+                    <TableHead className="text-right font-semibold">ALAMAT</TableHead>
+                    <TableHead className="text-right font-semibold">KETERANGAN</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -114,12 +100,8 @@ export function DeceasedVictims({
                       <TableCell className="font-medium">{item.no}</TableCell>
                       <TableCell className="font-medium">{item.name}</TableCell>
                       <TableCell className="text-right">{item.umur}</TableCell>
-                      <TableCell className="text-right">
-                        {item.alamat}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {item.description}
-                      </TableCell>
+                      <TableCell className="text-right">{item.alamat}</TableCell>
+                      <TableCell className="text-right">{item.description}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

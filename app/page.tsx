@@ -1,16 +1,14 @@
-import { DisasterDashboard } from "@/components/disaster-dashboard";
-import { getSheetData } from "../lib/sheet/google-sheets";
-import { mapSheetData } from "@/utils/dataMapper";
+import { DisasterDashboard } from '@/components/disaster-dashboard';
+import { getSheetData, getSheetLastUpdate } from '../lib/sheet/google-sheets';
+import { mapSheetData } from '@/utils/dataMapper';
 
 export default async function Home() {
-  const lastUpdate = await getSheetData(
-    "DATA_BENCANA!A2:B2",
-    "1ZFPFHPU31BTnYAVjG0OoOvlYebL4y8qDolF14IMWcNY"
-  );
-  const data = await getSheetData(
-    "DATA_BENCANA!A6:N",
-    "1ZFPFHPU31BTnYAVjG0OoOvlYebL4y8qDolF14IMWcNY"
-  );
+  const spreadsheetId = '11lz-JRqZm7nRt1Ya4ARFPFv4MoMEn72G2ChoaBsewaI';
+
+  // Get last update time from spreadsheet file metadata
+  const lastUpdate = await getSheetLastUpdate(spreadsheetId);
+  console.log(lastUpdate);
+  const data = await getSheetData('KECAMATAN!A6:N', spreadsheetId);
 
   const initialData = mapSheetData(data ?? []);
 
