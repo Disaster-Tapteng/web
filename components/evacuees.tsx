@@ -73,7 +73,7 @@ export function Evacuees({ initialData, lastUpdate }: EvacueesProps) {
           />
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Informasi Resmi
+              Informasi Resmi BPBD Tapanuli Tengah
             </p>
             <h1 className="text-3xl font-bold tracking-tight">Daftar Pengungsi</h1>
             <p className="text-muted-foreground">

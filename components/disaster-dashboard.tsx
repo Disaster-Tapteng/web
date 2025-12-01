@@ -102,7 +102,7 @@ export function DisasterDashboard({ initialData, lastUpdate }: DisasterDashboard
     {
       label: 'Pengungsi',
       value: totals.pengungsi,
-      description: 'Pengungsi di luar Pandan',
+      description: 'Total Pengungsi yang tercatat',
     },
     {
       label: 'Korban Meninggal',
