@@ -8,7 +8,7 @@ import { InstallPrompt } from '@/components/install-prompt';
 import Clarity from '@microsoft/clarity';
 import './globals.css';
 
-const projectId = process.env.MS_CLARITY_PROJECT_ID as string;
+const projectId = process.env.NEXT_MS_CLARITY_PROJECT_ID as string;
 Clarity.init(projectId);
 
 const inter = Inter({
