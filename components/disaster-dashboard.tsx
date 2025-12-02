@@ -191,14 +191,14 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
     {
       label: 'Pengungsi',
       value: totals.pengungsi,
-      description: 'Total Pengungsi yang tercatat',
+      description: 'Lihat Data Pengungsi →',
       navigateTo: '/daftar-pengungsi',
       highlight: 'yellow',
     },
     {
       label: 'Korban Meninggal',
       value: totals.meninggal,
-      description: 'Lihat daftar korban',
+      description: 'Lihat Daftar Korban →',
       navigateTo: '/daftar-korban',
       highlight: 'red',
     },

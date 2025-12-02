@@ -60,6 +60,21 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
+  // Skip service worker for localhost (development) navigation requests
+  // This allows normal Next.js routing to work during development
+  // if (
+  //   url.hostname === 'localhost' ||
+  //   url.hostname === '127.0.0.1' ||
+  //   url.hostname.includes('localhost')
+  // ) {
+  //   // Only skip for navigation requests in development
+  //   // Allow API and static assets to be cached
+  //   if (event.request.mode === 'navigate') {
+  //     // Let Next.js handle navigation in development
+  //     return;
+  //   }
+  // }
+
   // Handle data API endpoints - network first with cache fallback
   if (url.pathname === '/api/data') {
     event.respondWith(
@@ -103,34 +118,41 @@ self.addEventListener('fetch', function (event) {
 
   // Handle HTML pages - stale-while-revalidate strategy
   if (event.request.mode === 'navigate') {
+    // Skip service worker for localhost (development) to avoid routing issues
+    // if (
+    //   url.hostname === 'localhost' ||
+    //   url.hostname === '127.0.0.1' ||
+    //   url.hostname.includes('localhost')
+    // ) {
+    //   // Let Next.js handle navigation in development
+    //   return;
+    // }
+
     event.respondWith(
-      caches.open(CACHE_NAME).then(function (cache) {
-        return cache.match(event.request).then(function (cachedResponse) {
-          // Try to fetch fresh version
-          const fetchPromise = fetch(event.request)
-            .then(function (networkResponse) {
-              // Update cache with fresh HTML (which includes embedded data)
-              if (networkResponse.status === 200) {
-                cache.put(event.request, networkResponse.clone());
-              }
-              return networkResponse;
-            })
-            .catch(function () {
-              // Network failed - return cached version if available
+      fetch(event.request)
+        .then(function (networkResponse) {
+          // Update cache with fresh HTML (which includes embedded data)
+          if (networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(function (cache) {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(function () {
+          // Network failed - try to return cached version if available
+          return caches.open(CACHE_NAME).then(function (cache) {
+            return cache.match(event.request).then(function (cachedResponse) {
               if (cachedResponse) {
                 return cachedResponse;
               }
-              return new Response('Offline - Konten tidak tersedia', {
-                status: 503,
-                statusText: 'Service Unavailable',
-                headers: { 'Content-Type': 'text/html; charset=utf-8' },
-              });
+              // No cache available - let the request fail naturally
+              // Don't return a generic offline message, let Next.js handle it
+              throw new Error('Network error and no cached version available');
             });
-
-          // Return cached version immediately if available, otherwise wait for network
-          return cachedResponse || fetchPromise;
-        });
-      }),
+          });
+        }),
     );
     return;
   }
