@@ -26,21 +26,37 @@ interface EvacueesProps {
 export function Evacuees({ initialData, lastUpdate }: EvacueesProps) {
   const [data] = useState<EvacueeData[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
+  const [locationFilter, setLocationFilter] = useState('all');
   const [page, setPage] = useState(1);
   const pageSize = 50;
   const router = useRouter();
 
-  const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
+  const locationOptions = useMemo(() => {
+    const unique = new Set<string>();
+    data.forEach((item) => {
+      if (item.location) {
+        unique.add(item.location.trim());
+      }
+    });
+    return Array.from(unique).sort((a, b) => a.localeCompare(b, 'id'));
+  }, [data]);
 
+  // Filter data based on search term and location
+  const filteredData = useMemo(() => {
     const search = searchTerm.toLowerCase();
+
     return data.filter((item) => {
       const name = (item.name ?? '').toLowerCase();
       const location = (item.location ?? '').toLowerCase();
 
-      return name.includes(search) || location.includes(search);
+      const matchesSearch = !searchTerm || name.includes(search) || location.includes(search);
+
+      const matchesLocation =
+        locationFilter === 'all' || location.toLowerCase() === locationFilter.toLowerCase();
+
+      return matchesSearch && matchesLocation;
     });
-  }, [data, searchTerm]);
+  }, [data, searchTerm, locationFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / pageSize));
 
@@ -80,28 +96,48 @@ export function Evacuees({ initialData, lastUpdate }: EvacueesProps) {
               Cari data
             </p>
             <p className="text-sm text-muted-foreground">
-              Gunakan kolom di bawah untuk mencari berdasarkan nama atau lokasi pengungsian.
+              Gunakan kolom pencarian atau filter lokasi untuk mempersempit daftar.
             </p>
           </div>
-          <div>
-            <label htmlFor="evacuees-search" className="sr-only">
-              Masukkan kata kunci pencarian
-            </label>
-            <div className="relative">
-              <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-                aria-hidden
-              />
-              <Input
-                id="evacuees-search"
-                placeholder="Cari nama atau lokasi pengungsian"
-                value={searchTerm}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label htmlFor="evacuees-search" className="sr-only">
+                Masukkan kata kunci pencarian
+              </label>
+              <div className="relative">
+                <Search
+                  className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                  aria-hidden
+                />
+                <Input
+                  id="evacuees-search"
+                  placeholder="Cari nama atau lokasi pengungsian"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setPage(1);
+                  }}
+                  className="h-12 rounded-full border-muted-foreground/20 bg-background/60 pl-12 text-base"
+                />
+              </div>
+            </div>
+            <div>
+              <select
+                id="location-filter"
+                value={locationFilter}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value);
+                  setLocationFilter(e.target.value);
                   setPage(1);
                 }}
-                className="h-12 rounded-full border-muted-foreground/20 bg-background/60 pl-12 text-base"
-              />
+                className="w-full rounded-full border border-muted-foreground/20 bg-background/60 px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="all">Semua lokasi</option>
+                {locationOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <p className="text-sm text-muted-foreground" aria-live="polite">

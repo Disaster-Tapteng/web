@@ -1,4 +1,4 @@
-import { getSheetData, getSheetLastUpdate } from '@/lib/sheet/google-sheets';
+import { getSheetData, getSheetLastUpdate, getSpreadsheetId } from '@/lib/sheet/google-sheets';
 import { mapSheetData, mapSheetDataRefugee } from '@/utils/dataMapper';
 
 // Force dynamic rendering - always fetch fresh data
@@ -6,9 +6,8 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET() {
-  const spreadsheetId = '11lz-JRqZm7nRt1Ya4ARFPFv4MoMEn72G2ChoaBsewaI';
-
   try {
+    const spreadsheetId = getSpreadsheetId();
     // Fetch data from Google Sheets
     const [lastUpdate, data, poskoData] = await Promise.all([
       getSheetLastUpdate(spreadsheetId),

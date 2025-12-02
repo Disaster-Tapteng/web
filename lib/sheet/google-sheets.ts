@@ -2,6 +2,23 @@ import { google, sheets_v4 } from 'googleapis';
 
 type SheetValues = sheets_v4.Schema$ValueRange['values'];
 
+/**
+ * Get the spreadsheet ID from environment variables.
+ * Validates at runtime when called.
+ * Throws an error if GOOGLE_SHEETS_DB_ID is not set.
+ */
+export function getSpreadsheetId(): string {
+  const spreadsheetId = process.env.GOOGLE_SHEETS_DB_ID;
+
+  if (!spreadsheetId) {
+    throw new Error(
+      'Missing GOOGLE_SHEETS_DB_ID environment variable. Please set it in your .env.local file.',
+    );
+  }
+
+  return spreadsheetId;
+}
+
 async function getAuth() {
   const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
   const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
