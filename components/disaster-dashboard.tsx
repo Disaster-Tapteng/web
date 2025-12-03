@@ -12,8 +12,16 @@ import {
   TableCaption,
   TableFooter,
 } from '@/components/ui/table';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search, RefreshCw } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Search, RefreshCw, ArrowRight } from 'lucide-react';
 import { DisasterData } from '@/interfaces/DisasterData';
 import { useRouter } from 'next/navigation';
 import { Footer } from './footer';
@@ -173,6 +181,26 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
 
   const statCards = [
     {
+      label: 'Pengungsi',
+      value: totals.pengungsi,
+      description: 'Lihat data pengungsi',
+      navigateTo: '/daftar-pengungsi',
+      highlight: 'yellow',
+    },
+    {
+      label: 'Korban Meninggal',
+      value: totals.meninggal,
+      description: 'Lihat Daftar Korban',
+      navigateTo: '/daftar-korban',
+      highlight: 'red',
+    },
+    {
+      label: 'Posko',
+      value: currentTotalPosko || 0,
+      description: 'Lihat Daftar Posko',
+      navigateTo: '/posko',
+    },
+    {
       label: 'Total Penduduk',
       value: totals.jumlah_penduduk,
       description: 'Warga di kecamatan terdampak',
@@ -182,36 +210,12 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
       value: totals.terdampak,
       description: 'Perkiraan jiwa terdampak',
     },
-    {
-      label: 'Posko',
-      value: currentTotalPosko || 0,
-      description: 'Posko pengungsian',
-      navigateTo: '/posko',
-    },
-    {
-      label: 'Pengungsi',
-      value: totals.pengungsi,
-      description: 'Lihat data pengungsi →',
-      navigateTo: '/daftar-pengungsi',
-      highlight: 'yellow',
-    },
-    {
-      label: 'Korban Meninggal',
-      value: totals.meninggal,
-      description: 'Lihat Daftar Korban →',
-      navigateTo: '/daftar-korban',
-      highlight: 'red',
-    },
   ];
 
   const getCardStyle = (stat: any) => {
-    if (stat.highlight === 'red')
-      return 'border-destructive/40 bg-destructive/5 shadow-sm hover:cursor-pointer';
+    if (stat.highlight === 'red') return 'border-destructive/40 bg-destructive/5 shadow-sm';
 
-    if (stat.highlight === 'yellow')
-      return 'border-yellow-400/40 bg-yellow-400/5 shadow-sm hover:cursor-pointer';
-
-    if (stat.navigateTo) return 'hover:bg-muted/50 cursor-pointer transition';
+    if (stat.highlight === 'yellow') return 'border-yellow-400/40 bg-yellow-400/5 shadow-sm';
 
     return '';
   };
@@ -254,18 +258,10 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
           aria-live="polite"
         >
           {statCards.map((stat) => {
-            const isClickable = !!stat.navigateTo;
-
             return (
-              <Card
-                key={stat.label}
-                className={getCardStyle(stat)}
-                onClick={isClickable ? () => router.push(stat.navigateTo!) : undefined}
-                role={isClickable ? 'button' : undefined}
-                tabIndex={isClickable ? 0 : undefined}
-              >
+              <Card key={stat.label} className={getCardStyle(stat)}>
                 <CardHeader className="space-y-1">
-                  <CardDescription className="text-xs uppercase tracking-wide text-muted-foreground">
+                  <CardDescription className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {stat.label}
                   </CardDescription>
 
@@ -278,8 +274,25 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                     {formatNumber(stat.value)}
                   </CardTitle>
 
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  {!stat.navigateTo && stat.description && (
+                    <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  )}
                 </CardHeader>
+
+                {stat.navigateTo && stat.description && (
+                  <CardFooter className="pt-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full py-4 justify-between text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 border-blue-500 transition-colors"
+                      onClick={() => router.push(stat.navigateTo!)}
+                      aria-label={stat.description}
+                    >
+                      <span>{stat.description}</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </CardFooter>
+                )}
               </Card>
             );
           })}
@@ -288,19 +301,19 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
         {/* Search */}
         <section
           aria-labelledby="search-dashboard"
-          className="space-y-2 rounded-2xl border bg-muted/20 p-4 md:p-6"
+          className="space-y-2 rounded-2xl border bg-muted/20 p-4 md:p-6 hidden"
         >
           <div>
-            <p
+            {/* <p
               id="search-dashboard"
               className="text-sm font-semibold uppercase tracking-wide text-muted-foreground"
             >
               Cari data kecamatan
-            </p>
-            <p className="text-sm text-muted-foreground">
+            </p> */}
+            {/* <p className="text-sm text-muted-foreground">
               Gunakan kotak pencarian untuk memfilter berdasarkan nama kecamatan atau angka pada
               tabel.
-            </p>
+            </p> */}
           </div>
           <label htmlFor="dashboard-search" className="sr-only">
             Masukkan kata kunci pencarian
@@ -318,16 +331,16 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
               className="h-12 rounded-full border-muted-foreground/20 bg-background/60 pl-12 text-base"
             />
           </div>
-          <p className="text-sm text-muted-foreground" aria-live="polite">
+          {/* <p className="text-sm text-muted-foreground" aria-live="polite">
             Menampilkan {filteredData.length} dari {data.length} kecamatan.
-          </p>
+          </p> */}
         </section>
 
         {/* Data Table */}
         <section aria-labelledby="data-tabel-kecamatan" className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 id="data-tabel-kecamatan" className="text-xl font-semibold">
-              Rincian data kecamatan
+              Data Rincian per Kecamatan
             </h2>
             <p className="text-sm text-muted-foreground">
               Geser ke samping untuk melihat seluruh kolom.
@@ -342,9 +355,13 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                   </TableCaption>
                   <TableHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur">
                     <TableRow className="text-xs uppercase tracking-wide">
-                      <TableHead className="w-16 p-3 font-semibold">No</TableHead>
-                      <TableHead className="min-w-[160px] font-semibold">Kecamatan</TableHead>
-                      <TableHead className="min-w-[140px] text-right font-semibold">
+                      <TableHead className="sticky left-0 z-20 w-16 p-3 font-semibold bg-background/95 backdrop-blur">
+                        No
+                      </TableHead>
+                      <TableHead className="sticky left-16 z-20 min-w-[160px] font-semibold bg-background/95 backdrop-blur">
+                        Kecamatan
+                      </TableHead>
+                      <TableHead className="min-w-[180px] text-right font-semibold whitespace-nowrap">
                         Jumlah Penduduk
                       </TableHead>
                       <TableHead className="text-center font-semibold">
@@ -365,7 +382,9 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                       </TableHead>
                     </TableRow>
                     <TableRow className="bg-muted/40 text-[11px] uppercase tracking-wide">
-                      <TableHead colSpan={9}></TableHead>
+                      <TableHead className="sticky left-0 z-20 bg-muted/40"></TableHead>
+                      <TableHead className="sticky left-16 z-20 bg-muted/40"></TableHead>
+                      <TableHead colSpan={7}></TableHead>
                       <TableHead className="text-center">Ringan</TableHead>
                       <TableHead className="text-center">Sedang</TableHead>
                       <TableHead className="text-center">Berat</TableHead>
@@ -377,10 +396,12 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                   <TableBody>
                     {filteredData.map((item) => (
                       <TableRow key={item.id} className="text-sm odd:bg-muted/20">
-                        <TableCell className="font-semibold text-muted-foreground">
+                        <TableCell className="sticky left-0 z-10 font-semibold text-muted-foreground bg-background odd:bg-muted/20">
                           {item.no}
                         </TableCell>
-                        <TableCell className="font-medium">{item.kecamatan}</TableCell>
+                        <TableCell className="sticky left-16 z-10 font-medium bg-background odd:bg-muted/20">
+                          {item.kecamatan}
+                        </TableCell>
                         <TableCell className="text-right">
                           {formatNumber(item.jumlah_penduduk)}
                         </TableCell>
@@ -439,7 +460,8 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                   </TableBody>
                   <TableFooter className="bg-primary/5 text-sm font-semibold">
                     <TableRow>
-                      <TableCell colSpan={2}>Total</TableCell>
+                      <TableCell className="sticky left-0 z-10 bg-primary/5">Total</TableCell>
+                      <TableCell className="sticky left-16 z-10 bg-primary/5"></TableCell>
                       <TableCell className="text-right">
                         {formatNumber(totals.jumlah_penduduk)}
                       </TableCell>
