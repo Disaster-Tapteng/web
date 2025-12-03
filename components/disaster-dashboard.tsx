@@ -32,9 +32,15 @@ interface DisasterDashboardProps {
   initialData: DisasterData[];
   lastUpdate: any;
   totalPosko: number;
+  totalHelipadLocations: number;
 }
 
-export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: DisasterDashboardProps) {
+export function DisasterDashboard({
+  initialData,
+  lastUpdate,
+  totalPosko,
+  totalHelipadLocations,
+}: DisasterDashboardProps) {
   const [data, setData] = useState<DisasterData[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -174,7 +180,9 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
       },
     );
   }, [filteredData]);
-
+  const persentaseTerdampak = useMemo(() => {
+    return (totals.terdampak / totals.jumlah_penduduk) * 100;
+  }, [totals.terdampak, totals.jumlah_penduduk]);
   const lastUpdateDate = currentLastUpdate && currentLastUpdate[0] && currentLastUpdate[0][1];
   const numberFormatter = useMemo(() => new Intl.NumberFormat('id-ID'), []);
   const formatNumber = (value: number) => numberFormatter.format(value);
@@ -183,39 +191,51 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
     {
       label: 'Pengungsi',
       value: totals.pengungsi,
-      description: 'Lihat data pengungsi',
+      description: 'Lihat Data',
       navigateTo: '/daftar-pengungsi',
       highlight: 'yellow',
     },
     {
       label: 'Korban Meninggal',
       value: totals.meninggal,
-      description: 'Lihat Daftar Korban',
+      description: 'Lihat Data',
       navigateTo: '/daftar-korban',
       highlight: 'red',
     },
     {
-      label: 'Posko',
+      label: 'Posko Pengungsian',
       value: currentTotalPosko || 0,
-      description: 'Lihat Daftar Posko',
+      description: 'Lihat Data',
       navigateTo: '/posko',
+      highlight: 'green',
     },
     {
-      label: 'Total Penduduk',
-      value: totals.jumlah_penduduk,
-      description: 'Warga di kecamatan terdampak',
+      label: 'Titik Lokasi Helipad',
+      value: totalHelipadLocations || 0,
+      description: 'Lihat Data',
+      navigateTo: '/titik-lokasi-helipad',
+      highlight: 'blue',
     },
-    {
-      label: 'Terdampak',
-      value: totals.terdampak,
-      description: 'Perkiraan jiwa terdampak',
-    },
+    // {
+    //   label: 'Total Penduduk',
+    //   value: totals.jumlah_penduduk,
+    //   description: 'Warga di kecamatan terdampak',
+    // },
+    // {
+    //   label: 'Terdampak',
+    //   value: totals.terdampak,
+    //   description: 'Perkiraan jiwa terdampak',
+    // },
   ];
 
   const getCardStyle = (stat: any) => {
     if (stat.highlight === 'red') return 'border-destructive/40 bg-destructive/5 shadow-sm';
 
     if (stat.highlight === 'yellow') return 'border-yellow-400/40 bg-yellow-400/5 shadow-sm';
+
+    if (stat.highlight === 'green') return 'border-green-400/40 bg-green-400/5 shadow-sm';
+
+    if (stat.highlight === 'blue') return 'border-blue-400/40 bg-blue-400/5 shadow-sm';
 
     return '';
   };
@@ -232,7 +252,7 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
       <div className="flex flex-col gap-10">
         <Header
           lastUpdateDate={lastUpdateDate}
-          showActions={true}
+          showActions={false}
           title="Data Bencana Banjir Bandang dan Longsor"
         />
 
@@ -252,16 +272,39 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
           </button>
         </div>
 
+        {/* Summary Statistics */}
+        <section className="mb-6">
+          <Card className="">
+            <CardContent className="p-4 text-center">
+              <div className="flex flex-col items-center gap-4 text-center">
+                <span className="text-center">Warga Terdampak</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-primary md:text-5xl">
+                    {persentaseTerdampak.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground md:text-base">
+                  <span className="font-semibold text-foreground">
+                    {formatNumber(totals.terdampak)} dari {formatNumber(totals.jumlah_penduduk)}{' '}
+                    warga terdampak
+                  </span>
+                  {/* <span>dari <span className="font-semibold text-foreground">{formatNumber(totals.jumlah_penduduk)}</span> warga terdampak</span> */}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Summary Cards */}
         <section
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-4 md:grid-cols-2 xl:grid-cols-4"
           aria-live="polite"
         >
           {statCards.map((stat) => {
             return (
-              <Card key={stat.label} className={getCardStyle(stat)}>
+              <Card key={stat.label} className={`${getCardStyle(stat)} text-center`}>
                 <CardHeader className="space-y-1">
-                  <CardDescription className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  <CardDescription className="text-sm font-semibold text-black">
                     {stat.label}
                   </CardDescription>
 
@@ -269,6 +312,7 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                     className={`text-3xl font-bold
                       ${stat.highlight === 'red' ? 'text-destructive' : ''}
                       ${stat.highlight === 'yellow' ? 'text-yellow-500' : ''}
+                      ${stat.highlight === 'blue' ? 'text-blue-500' : ''}
                     `}
                   >
                     {formatNumber(stat.value)}
@@ -282,9 +326,9 @@ export function DisasterDashboard({ initialData, lastUpdate, totalPosko }: Disas
                 {stat.navigateTo && stat.description && (
                   <CardFooter className="pt-0">
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full py-4 justify-between text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 border-blue-500 transition-colors"
+                      variant="blue"
+                      size="default"
+                      className="w-full justify-between text-sm font-medium transition-colors"
                       onClick={() => router.push(stat.navigateTo!)}
                       aria-label={stat.description}
                     >

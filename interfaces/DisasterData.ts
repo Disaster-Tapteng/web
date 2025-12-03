@@ -32,4 +32,14 @@ export interface EvacueeData {
   location: string;
 }
 
+export interface HelipadLocationData {
+  id: string;
+  no: number | null;
+  kecamatan: string;
+  desa: string;
+  latitude: string;
+  longitude: string;
+  keterangan: string;
+}
+
 export type SheetValues = (string | null | undefined)[][];

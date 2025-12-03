@@ -1,4 +1,10 @@
-import { DeceasedData, DisasterData, EvacueeData, SheetValues } from '../interfaces/DisasterData';
+import {
+  DeceasedData,
+  DisasterData,
+  EvacueeData,
+  HelipadLocationData,
+  SheetValues,
+} from '../interfaces/DisasterData';
 
 const cleanNumber = (value: string | null | undefined): number => {
   if (typeof value === 'string') {
@@ -158,4 +164,51 @@ export function mapSheetDataEvacuee(sheetData: SheetValues, location: string): E
       };
     })
     .filter((record): record is EvacueeData => record !== null);
+}
+
+export function mapSheetDataHelipad(sheetData: SheetValues): HelipadLocationData[] {
+  if (!sheetData || sheetData.length < 3) {
+    return [];
+  }
+
+  // Skip header rows (first 2 rows) and process data
+  const dataRows = sheetData.slice(2);
+
+  let currentKecamatan = '';
+
+  return dataRows
+    .map((row, index): HelipadLocationData | null => {
+      // Skip NO column (row[0]), start from KECAMATAN (row[1])
+      const kecamatanValue = row[1];
+      const desaValue = row[2];
+      const latitudeValue = row[3];
+      const longitudeValue = row[4];
+      const keteranganValue = row[5];
+
+      // Update current KECAMATAN if it exists
+      if (kecamatanValue && String(kecamatanValue).trim() !== '') {
+        currentKecamatan = String(kecamatanValue).trim();
+      }
+
+      // Validate required fields
+      if (!desaValue || String(desaValue).trim() === '') {
+        return null;
+      }
+
+      const desa = String(desaValue).trim();
+      const latitude = latitudeValue ? String(latitudeValue).trim() : '';
+      const longitude = longitudeValue ? String(longitudeValue).trim() : '';
+      const keterangan = keteranganValue ? String(keteranganValue).trim() : '';
+
+      return {
+        id: `helipad-${index + 1}`,
+        no: null, // Will be generated automatically in the component
+        kecamatan: currentKecamatan || '',
+        desa,
+        latitude,
+        longitude,
+        keterangan,
+      };
+    })
+    .filter((record): record is HelipadLocationData => record !== null);
 }
