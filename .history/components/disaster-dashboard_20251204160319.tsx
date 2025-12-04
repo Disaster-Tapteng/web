@@ -189,28 +189,28 @@ export function DisasterDashboard({
 
   const statCards = [
     {
-      label: 'Warga\nMengungsi',
+      label: 'Warga Mengungsi',
       value: totals.pengungsi,
       description: 'Lihat Data',
       navigateTo: '/daftar-pengungsi',
       highlight: 'yellow',
     },
     {
-      label: 'Korban\nMeninggal',
+      label: 'Korban Meninggal',
       value: totals.meninggal,
       description: 'Lihat Data',
       navigateTo: '/daftar-korban',
       highlight: 'red',
     },
     {
-      label: 'Posko\nPengungsian',
+      label: 'Posko Pengungsian',
       value: currentTotalPosko || 0,
       description: 'Lihat Data',
       navigateTo: '/posko',
       highlight: 'green',
     },
     {
-      label: 'Titik Lokasi\nHelipad',
+      label: 'Titik Lokasi Helipad',
       value: totalHelipadLocations || 0,
       description: 'Lihat Data',
       navigateTo: '/titik-lokasi-helipad',
@@ -260,29 +260,34 @@ export function DisasterDashboard({
           {/* Hero Section - Summary Statistics */}
           <section className="relative">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 p-[2px]">
-              <div className="relative bg-white dark:bg-slate-900 rounded-2xl p-4 md:p-6">
-                <div className="flex flex-col gap-3 text-center">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-800 w-fit mx-auto">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                    <span className="text-xs font-bold text-red-700 dark:text-red-300 uppercase tracking-widest">
-                      Live Update
-                    </span>
+              <div className="relative bg-white dark:bg-slate-900 rounded-2xl p-5 md:p-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-center md:text-left">
+                  <div className="flex flex-col gap-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-800 w-fit mx-auto md:mx-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                      <span className="text-xs font-bold text-red-700 dark:text-red-300 uppercase tracking-widest">
+                        Live Update
+                      </span>
+                    </div>
+                    <p className="text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                      Persentase Warga Terdampak
+                    </p>
                   </div>
-                  <p className="text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                    Persentase Warga Terdampak
-                  </p>
-                  <div className="text-4xl md:text-6xl font-black bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
-                    {persentaseTerdampak.toFixed(1)}%
-                  </div>
-                  <div className="flex flex-wrap items-center justify-center gap-1.5 text-sm md:text-base">
-                    <span className="font-black text-foreground">
-                      {formatNumber(totals.terdampak)}
-                    </span>
-                    <span className="text-muted-foreground">dari</span>
-                    <span className="font-black text-foreground">
-                      {formatNumber(totals.jumlah_penduduk)}
-                    </span>
-                    <span className="text-muted-foreground">warga terdampak</span>
+
+                  <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+                    <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+                      {persentaseTerdampak.toFixed(1)}%
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 text-sm md:text-base">
+                      <span className="font-black text-foreground">
+                        {formatNumber(totals.terdampak)}
+                      </span>
+                      <span className="text-muted-foreground">dari</span>
+                      <span className="font-black text-foreground">
+                        {formatNumber(totals.jumlah_penduduk)}
+                      </span>
+                      <span className="text-muted-foreground">warga</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -317,10 +322,10 @@ export function DisasterDashboard({
                   blue: 'from-blue-500 to-indigo-600',
                 };
                 return (
-                  <div key={stat.label} className="group relative h-full">
-                    <Card className="relative border-2 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 py-2 md:py-0 h-full flex flex-col">
+                  <div key={stat.label} className="group relative">
+                    <Card className="relative border-2 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 py-2 md:py-0">
                       <CardHeader className="space-y-2 md:space-y-4 p-3 md:p-6 pb-2 md:pb-3">
-                        <CardDescription className="text-xs font-bold uppercase tracking-widest text-muted-foreground h-8 md:h-auto leading-tight whitespace-pre-line">
+                        <CardDescription className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                           {stat.label}
                         </CardDescription>
                         <CardTitle

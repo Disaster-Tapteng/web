@@ -90,57 +90,90 @@ export function HelipadLocations({ initialData, lastUpdate }: HelipadLocationsPr
   };
 
   return (
-    <div className="container mx-auto max-w-6xl py-10 px-4 md:px-6">
-      <div className="flex flex-col gap-8">
-        <Button
-          variant="ghost"
-          onClick={() => router.push('/')}
-          className="w-fit gap-2 px-0 text-sm font-medium text-muted-foreground hover:text-foreground"
-          aria-label="Kembali ke halaman utama"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          Kembali ke beranda
-        </Button>
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      <div className="container mx-auto max-w-7xl py-8 px-4 md:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 md:gap-8">
+          <Button
+            variant="ghost"
+            onClick={() => router.push('/')}
+            className="w-fit gap-2 px-0 text-sm font-medium text-muted-foreground hover:text-foreground"
+            aria-label="Kembali ke halaman utama"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            Kembali ke beranda
+          </Button>
 
-        <Header lastUpdateDate={lastUpdateDate} showActions={false} title="Titik Lokasi Helipad" />
-
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Cari kecamatan, desa, koordinat, atau keterangan lokasi"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+          <Header
+            lastUpdateDate={lastUpdateDate}
+            showActions={false}
+            title="Titik Lokasi Helipad"
           />
-        </div>
 
-        {/* Table */}
-        {filteredData.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            Tidak ada data yang sesuai dengan pencarian
-          </div>
-        )}
-        {filteredData.length > 0 && (
-          <Card>
-            <CardContent className="p-0">
+          {/* Search */}
+          <section className="space-y-4 rounded-xl border-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-5 md:p-6">
+            <div className="flex flex-col gap-2">
+              <p className="text-base font-bold text-slate-900 dark:text-slate-100">
+                🔍 Cari Lokasi Helipad
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Cari berdasarkan kecamatan, desa, koordinat, atau keterangan lokasi.
+              </p>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cari kecamatan, desa, koordinat, atau keterangan lokasi"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="h-12 rounded-xl border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 pl-12 text-base focus-visible:ring-2 focus-visible:ring-blue-500"
+              />
+            </div>
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-950 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 w-fit">
+              <span className="text-blue-600 dark:text-blue-500">{filteredData.length}</span>
+              <span>dari</span>
+              <span className="text-blue-600 dark:text-blue-500">{data.length}</span>
+              <span>lokasi ditampilkan</span>
+            </div>
+          </section>
+
+          {/* Table */}
+          {filteredData.length === 0 && (
+            <div className="rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 p-8 text-center">
+              <p className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+                Tidak ada data yang sesuai dengan pencarian
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                Coba gunakan kata kunci lain.
+              </p>
+            </div>
+          )}
+          {filteredData.length > 0 && (
+            <div className="overflow-hidden rounded-xl border-2 border-slate-200 dark:border-slate-800 shadow-lg bg-white dark:bg-slate-950">
               <div className="overflow-x-auto">
                 <Table>
-                  <TableCaption className="px-6 text-left pb-2">
-                    Daftar titik lokasi helipad untuk operasi evakuasi dan bantuan di Kabupaten
-                    Tapanuli Tengah.
-                  </TableCaption>
-                  <TableHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur">
-                    <TableRow className="text-xs uppercase tracking-wide">
-                      <TableHead className="w-16 font-semibold">NO</TableHead>
-                      <TableHead className="min-w-[140px] font-semibold">Kecamatan</TableHead>
-                      <TableHead className="min-w-[180px] font-semibold">Desa</TableHead>
-                      <TableHead className="min-w-[140px] font-semibold">Latitude</TableHead>
-                      <TableHead className="min-w-[140px] font-semibold">Longitude</TableHead>
-                      <TableHead className="min-w-[200px] font-semibold">
+                  <TableHeader className="bg-slate-100 dark:bg-slate-900">
+                    <TableRow className="text-xs uppercase tracking-wider border-b-2 border-slate-300 dark:border-slate-700">
+                      <TableHead className="w-16 py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
+                        NO
+                      </TableHead>
+                      <TableHead className="min-w-[140px] py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
+                        Kecamatan
+                      </TableHead>
+                      <TableHead className="min-w-[180px] py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
+                        Desa
+                      </TableHead>
+                      <TableHead className="min-w-[140px] py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
+                        Latitude
+                      </TableHead>
+                      <TableHead className="min-w-[140px] py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
+                        Longitude
+                      </TableHead>
+                      <TableHead className="min-w-[200px] py-4 px-4 font-bold text-slate-700 dark:text-slate-300">
                         Keterangan Titik Lokasi
                       </TableHead>
-                      <TableHead className="w-24 font-semibold text-center">Peta</TableHead>
+                      <TableHead className="w-24 py-4 px-4 font-bold text-center text-slate-700 dark:text-slate-300">
+                        Peta
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -148,39 +181,48 @@ export function HelipadLocations({ initialData, lastUpdate }: HelipadLocationsPr
                       const mapsLink = getGoogleMapsLink(item.latitude, item.longitude);
 
                       return (
-                        <TableRow key={item.id} className="text-sm">
-                          <TableCell className="font-medium text-muted-foreground">
+                        <TableRow
+                          key={item.id}
+                          className={`text-[13px] transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/50 ${index % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/30 dark:bg-slate-900/30'}`}
+                        >
+                          <TableCell className="font-bold text-slate-500 dark:text-slate-400 py-3.5 px-4">
                             {index + 1}
                           </TableCell>
-                          <TableCell className="font-medium">{item.kecamatan || '-'}</TableCell>
-                          <TableCell>{item.desa}</TableCell>
-                          <TableCell className="font-mono text-xs">
+                          <TableCell className="font-semibold py-3.5 px-4 text-slate-900 dark:text-slate-100">
+                            {item.kecamatan || '-'}
+                          </TableCell>
+                          <TableCell className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
+                            {item.desa}
+                          </TableCell>
+                          <TableCell className="font-mono text-xs py-3.5 px-4 text-slate-600 dark:text-slate-400">
                             {item.latitude || '-'}
                           </TableCell>
-                          <TableCell className="font-mono text-xs">
+                          <TableCell className="font-mono text-xs py-3.5 px-4 text-slate-600 dark:text-slate-400">
                             {item.longitude || '-'}
                           </TableCell>
-                          <TableCell>{item.keterangan || '-'}</TableCell>
-                          <TableCell className="text-center">
+                          <TableCell className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
+                            {item.keterangan || '-'}
+                          </TableCell>
+                          <TableCell className="text-center py-3.5 px-4">
                             {mapsLink ? (
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 asChild
-                                className="h-8 w-8 p-0"
+                                className="h-9 w-9 p-0 hover:bg-blue-100 dark:hover:bg-blue-950"
                                 aria-label="Buka di Google Maps"
                               >
                                 <a
                                   href={mapsLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-primary hover:text-primary/80"
+                                  className="text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400"
                                 >
-                                  <MapPin className="h-4 w-4" />
+                                  <MapPin className="h-5 w-5" />
                                 </a>
                               </Button>
                             ) : (
-                              <span className="text-muted-foreground">-</span>
+                              <span className="text-slate-400 dark:text-slate-600">-</span>
                             )}
                           </TableCell>
                         </TableRow>
@@ -189,11 +231,11 @@ export function HelipadLocations({ initialData, lastUpdate }: HelipadLocationsPr
                   </TableBody>
                 </Table>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
 
-        <Footer />
+          <Footer />
+        </div>
       </div>
     </div>
   );
