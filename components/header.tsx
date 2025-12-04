@@ -27,7 +27,7 @@ export function Header({ lastUpdateDate, showActions = false, title }: HeaderPro
             <span className="text-xs font-semibold uppercase tracking-wider text-red-700 dark:text-red-300">
               Informasi Resmi
             </span>
-            <span className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 px-3 py-1 text-xs font-bold text-white shadow-md">
+            <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow-md">
               BPBD Tapanuli Tengah
             </span>
           </div>
