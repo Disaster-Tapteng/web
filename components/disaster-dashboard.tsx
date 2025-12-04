@@ -189,28 +189,28 @@ export function DisasterDashboard({
 
   const statCards = [
     {
-      label: 'Warga Mengungsi',
+      label: 'Warga\nMengungsi',
       value: totals.pengungsi,
       description: 'Lihat Data',
       navigateTo: '/daftar-pengungsi',
       highlight: 'yellow',
     },
     {
-      label: 'Korban Meninggal',
+      label: 'Korban\nMeninggal',
       value: totals.meninggal,
       description: 'Lihat Data',
       navigateTo: '/daftar-korban',
       highlight: 'red',
     },
     {
-      label: 'Posko Pengungsian',
+      label: 'Posko\nPengungsian',
       value: currentTotalPosko || 0,
       description: 'Lihat Data',
       navigateTo: '/posko',
       highlight: 'green',
     },
     {
-      label: 'Titik Lokasi Helipad',
+      label: 'Titik Lokasi\nHelipad',
       value: totalHelipadLocations || 0,
       description: 'Lihat Data',
       navigateTo: '/titik-lokasi-helipad',
@@ -317,10 +317,10 @@ export function DisasterDashboard({
                   blue: 'from-blue-500 to-indigo-600',
                 };
                 return (
-                  <div key={stat.label} className="group relative">
-                    <Card className="relative border-2 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 py-2 md:py-0">
+                  <div key={stat.label} className="group relative h-full">
+                    <Card className="relative border-2 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 py-2 md:py-0 h-full flex flex-col">
                       <CardHeader className="space-y-2 md:space-y-4 p-3 md:p-6 pb-2 md:pb-3">
-                        <CardDescription className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        <CardDescription className="text-xs font-bold uppercase tracking-widest text-muted-foreground h-8 md:h-auto leading-tight whitespace-pre-line">
                           {stat.label}
                         </CardDescription>
                         <CardTitle
