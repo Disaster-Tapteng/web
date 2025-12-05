@@ -43,23 +43,24 @@ export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProp
     return Array.from(unique).sort((a, b) => a.localeCompare(b, 'id'));
   }, [data]);
 
-  // Filter data based on search term and description
+  // Filter data based on search term and kecamatan filter
   const filteredData = useMemo(() => {
     const search = searchTerm.toLowerCase();
 
     return data.filter((item) => {
-      const normalizedDescription = (item.kecamatan ?? '').toString().trim().toLowerCase();
+      const normalizedKecamatan = (item.kecamatan ?? '').toString().trim().toLowerCase();
+      const normalizedAlamat = (item.alamat ?? '').toString().trim().toLowerCase();
+
       const matchesSearch =
         !searchTerm ||
         item.name.toLowerCase().includes(search) ||
-        // item.umur.toString().includes(search) ||
-        // item.alamat.toString().includes(search) ||
-        normalizedDescription.includes(search);
+        normalizedAlamat.includes(search) ||
+        normalizedKecamatan.includes(search);
 
-      const matchesDescription =
-        descriptionFilter === 'all' || normalizedDescription === descriptionFilter;
+      const matchesKecamatan =
+        descriptionFilter === 'all' || normalizedKecamatan === descriptionFilter;
 
-      return matchesSearch && matchesDescription;
+      return matchesSearch && matchesKecamatan;
     });
   }, [data, searchTerm, descriptionFilter]);
 
@@ -107,7 +108,7 @@ export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProp
               Cari data
             </p>
             <p className="text-sm text-muted-foreground">
-              Gunakan kolom pencarian atau filter keterangan untuk mempersempit daftar.
+              Gunakan kolom pencarian atau filter kecamatan untuk mempersempit daftar.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
@@ -122,7 +123,7 @@ export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProp
                 />
                 <Input
                   id="victims-search"
-                  placeholder="Cari nama, usia, alamat, atau keterangan"
+                  placeholder="Cari nama, alamat, atau kecamatan"
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
@@ -133,12 +134,9 @@ export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProp
               </div>
             </div>
             <div>
-              {/*<label
-                htmlFor="description-filter"
-                className="text-sm font-medium text-muted-foreground"
-              >
-                Filter berdasarkan keterangan
-              </label>*/}
+              <label htmlFor="description-filter" className="sr-only">
+                Filter berdasarkan kecamatan
+              </label>
               <select
                 id="description-filter"
                 value={descriptionFilter}
@@ -147,8 +145,9 @@ export function DeceasedVictims({ initialData, lastUpdate }: DeceasedVictimsProp
                   setPage(1);
                 }}
                 className="w-full rounded-full border border-muted-foreground/20 bg-background/60 px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Filter berdasarkan kecamatan"
               >
-                <option value="all">Semua keterangan</option>
+                <option value="all">Semua Kecamatan</option>
                 {descriptionOptions.map((option) => (
                   <option key={option} value={option.toLowerCase()}>
                     {option}
