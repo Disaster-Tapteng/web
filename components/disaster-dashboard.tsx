@@ -399,10 +399,10 @@ export function DisasterDashboard({
                   </TableCaption>
                   <TableHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur">
                     <TableRow className="text-xs uppercase tracking-wide">
-                      <TableHead className="sticky left-0 z-40 w-[64px] p-3 font-semibold bg-background border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
+                      <TableHead className="sticky left-0 z-40 w-[64px] p-3 font-semibold bg-background shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
                         No
                       </TableHead>
-                      <TableHead className="sticky left-[64px] z-40 min-w-[160px] p-3 font-semibold bg-background border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
+                      <TableHead className="sticky left-[64px] z-40 min-w-[160px] p-3 font-semibold bg-background shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
                         Kecamatan
                       </TableHead>
                       <TableHead className="min-w-[180px] text-right font-semibold whitespace-nowrap relative z-0">
@@ -432,8 +432,8 @@ export function DisasterDashboard({
                       </TableHead>
                     </TableRow>
                     <TableRow className="bg-muted/40 text-[11px] uppercase tracking-wide">
-                      <TableHead className="sticky left-0 z-40 w-[64px] p-3 bg-muted/40 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]"></TableHead>
-                      <TableHead className="sticky left-[64px] z-40 p-3 bg-muted/40 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]"></TableHead>
+                      <TableHead className="sticky left-0 z-40 w-[64px] p-3 bg-muted/40 shadow-[2px_0_4px_rgba(0,0,0,0.1)]"></TableHead>
+                      <TableHead className="sticky left-[64px] z-40 p-3 bg-muted/40 shadow-[2px_0_4px_rgba(0,0,0,0.1)]"></TableHead>
                       <TableHead colSpan={7}></TableHead>
                       <TableHead className="text-center">Ringan</TableHead>
                       <TableHead className="text-center">Sedang</TableHead>
@@ -446,10 +446,10 @@ export function DisasterDashboard({
                   <TableBody>
                     {filteredData.map((item) => (
                       <TableRow key={item.id} className="text-sm odd:bg-muted/20">
-                        <TableCell className="sticky left-0 z-140 w-[64px] font-semibold text-muted-foreground bg-background odd:bg-gray-100 p-3 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
+                        <TableCell className="sticky left-0 z-140 w-[64px] font-semibold text-muted-foreground bg-background odd:bg-gray-100 p-3 shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
                           {item.no}
                         </TableCell>
-                        <TableCell className="sticky left-[54px] z-140 font-medium bg-background odd:bg-muted/20 p-3 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
+                        <TableCell className="sticky left-[64px] z-140 font-medium bg-background odd:bg-muted/20 p-3 shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
                           {item.kecamatan}
                         </TableCell>
                         <TableCell className="text-right relative z-0">
@@ -510,10 +510,12 @@ export function DisasterDashboard({
                   </TableBody>
                   <TableFooter className="bg-primary/5 text-sm font-semibold">
                     <TableRow>
-                      <TableCell className="sticky left-0 z-140 w-[64px] bg-primary/5 p-3 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]">
+                      <TableCell
+                        colSpan={2}
+                        className="sticky left-0 z-140 min-w-[224px] bg-muted p-3 shadow-[2px_0_4px_rgba(0,0,0,0.1)] text-center"
+                      >
                         Total
                       </TableCell>
-                      <TableCell className="sticky left-[64px] z-140 bg-primary/5 p-3 border-r border-border shadow-[2px_0_4px_rgba(0,0,0,0.1)]"></TableCell>
                       <TableCell className="text-right relative z-0">
                         {formatNumber(totals.jumlah_penduduk)}
                       </TableCell>
