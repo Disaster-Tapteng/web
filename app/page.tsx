@@ -47,7 +47,7 @@ export default async function Home() {
   const spreadsheetId = getSpreadsheetId();
   // Get last update time from spreadsheet file metadata
   const lastUpdate = await getSheetLastUpdate(spreadsheetId);
-  const data = await getSheetData('KECAMATAN!A5:O', spreadsheetId);
+  const data = await getSheetData('KECAMATAN!A5:P', spreadsheetId);
   const poskoData = await getSheetData("'POSKO PENGUNGSIAN'!B4:E", spreadsheetId);
   const helipadData = await getSheetData("'TITIK-LOKASI-HELIDROP'!A3:F", spreadsheetId);
   const jalanPutusData = await getSheetData("'KONDISI-JALAN'!A1:H", spreadsheetId);
